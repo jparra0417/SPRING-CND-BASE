@@ -22,13 +22,13 @@ public class Person extends Base implements Serializable {
 	private static final long serialVersionUID = -4352435119454271653L;
 
 	/** attributes */
-	@NotEmpty(message = "person.errorNameNotEmpty")
-	@Length(max = 200, message = "person.errorNameLength")
-	private String name;
+	@NotEmpty(message = "person.errorFirstNameNotEmpty")
+	@Length(max = 200, message = "person.errorFirstNameLength")
+	private String firstName;
 
 	@NotEmpty(message = "person.errorLastNameNotEmpty")
-	@Length(max = 200, message = "person.errorLastnameLength")
-	private String lastname;
+	@Length(max = 200, message = "person.errorLastNameLength")
+	private String lastName;
 
 	@Length(max = 100, message = "person.errorEmailLength")
 	@Email(message = "person.errorEmailEmail")
@@ -44,21 +44,20 @@ public class Person extends Base implements Serializable {
 		super();
 	}
 
-	/** methods */
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLastname() {
-		return lastname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getEmail() {
@@ -79,7 +78,8 @@ public class Person extends Base implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Person [name=" + name + ", lastname=" + lastname + ", email=" + email + "]";
+		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password="
+				+ password + "]";
 	}
 
 }

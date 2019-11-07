@@ -23,25 +23,10 @@ public class Base implements Serializable {
 	private String id;
 
 	@CreatedDate
-	private Date created;
+	private Date createdAt;
 
 	@LastModifiedDate
-	private Date modified;
-
-	/** constructor */
-	public Base() {
-		this(UUID.randomUUID());
-	}
-
-	public Base(UUID guid) {
-		Assert.notNull(guid, "UUID is required");
-		id = guid.toString();
-	}
-
-	public Base(String guid) {
-		Assert.notNull(guid, "UUID is required");
-		id = guid;
-	}
+	private Date modifiedAt;
 
 	/** methods */
 	public String getId() {
@@ -52,25 +37,20 @@ public class Base implements Serializable {
 		this.id = id;
 	}
 
-	public Date getCreated() {
-		return created;
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setCreated(Date created) {
-		this.created = created;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
-	public Date getModified() {
-		return modified;
+	public Date getModifiedAt() {
+		return modifiedAt;
 	}
 
-	public void setModified(Date modified) {
-		this.modified = modified;
-	}
-
-	@Override
-	public String toString() {
-		return "Base [id=" + id + ", created=" + created + ", modified=" + modified + "]";
+	public void setModifiedAt(Date modifiedAt) {
+		this.modifiedAt = modifiedAt;
 	}
 
 	@Override
