@@ -32,4 +32,12 @@ public interface PersonService {
 	 */
 	public Person findByEmail(String email);
 
+	/**
+	 * Return a person by email and password
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public Person findByEmailAndPassword(String email, String password);
+
 }

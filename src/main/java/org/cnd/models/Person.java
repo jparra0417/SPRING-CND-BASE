@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Person abstracts the model person
@@ -16,6 +16,11 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
  * @author JParra
  *
  */
+/**
+ * @author User
+ *
+ */
+@Document(collection = "person")
 public class Person extends Base implements Serializable {
 
 	/** serial version UID */
@@ -29,15 +34,10 @@ public class Person extends Base implements Serializable {
 	@NotEmpty(message = "person.errorLastNameNotEmpty")
 	@Length(max = 200, message = "person.errorLastNameLength")
 	private String lastName;
-
+	
 	@Length(max = 100, message = "person.errorEmailLength")
-	@Email(message = "person.errorEmailEmail")
+	@Email(message = "person.errorEmailEmail")		
 	private String email;
-
-	@NotEmpty(message = "person.errorPasswordNotEmpty")
-	@Length(max = 100, message = "person.errorPasswordLength")
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private String password;
 
 	/** constructor */
 	public Person() {
@@ -68,18 +68,9 @@ public class Person extends Base implements Serializable {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	@Override
 	public String toString() {
-		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password="
-				+ password + "]";
+		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
 	}
 
 }

@@ -1,5 +1,7 @@
 package org.cnd.controllers;
 
+import java.util.List;
+
 import org.cnd.models.Person;
 import org.cnd.services.PersonService;
 import org.jboss.logging.Logger;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(path = "/person")
-public class PersonController {
+public class PersonController extends BaseController {
 	private static Logger _logger = Logger.getLogger(PersonController.class);
 	@Autowired
 	private PersonService personService;
@@ -33,6 +35,9 @@ public class PersonController {
 	 */
 	@PostMapping(path = "/save")
 	public ResponseEntity<?> save(@RequestBody Person person) {
+		List<String> errors = this.validateConstraints(person);
+		if (errors != null)
+			return new ResponseEntity<List<String>>(errors, HttpStatus.BAD_REQUEST);
 		this.personService.save(person);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -43,9 +48,9 @@ public class PersonController {
 	 * @param person
 	 * @return
 	 */
-	@GetMapping(path = "/getByEmail")
-	public ResponseEntity<?> getByEmail(@RequestParam String email) {
-		Person person = this.personService.findByEmail(email);
+	@GetMapping(path = "/getByEmailAndPassword")
+	public ResponseEntity<?> getByEmailAndPassword(@RequestParam String email, @RequestParam String password) {
+		Person person = this.personService.findByEmailAndPassword(email, password);
 		if (person == null)
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		return new ResponseEntity<Person>(person, HttpStatus.OK);

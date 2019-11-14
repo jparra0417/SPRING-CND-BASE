@@ -37,4 +37,11 @@ public class PersonServiceImpl implements PersonService {
 		return person.isPresent() ? person.get() : null;
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Person findByEmailAndPassword(String email, String password) {
+		Optional<Person> person = this.personRepository.findByEmailAndPassword(email, password);
+		return person.isPresent() ? person.get() : null;
+	}
+
 }
