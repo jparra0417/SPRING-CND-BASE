@@ -3,7 +3,7 @@ package org.cnd.services;
 import org.cnd.models.Person;
 
 /**
- * Person service is a contract that limits the methods of person
+ * Capacities of the person service
  * 
  * @author JParra
  *
@@ -23,21 +23,5 @@ public interface PersonService {
 	 * @return
 	 */
 	public Person findById(String id);
-
-	/**
-	 * Return a person by email
-	 * 
-	 * @param email
-	 * @return
-	 */
-	public Person findByEmail(String email);
-
-	/**
-	 * Return a person by email and password
-	 * 
-	 * @param email
-	 * @return
-	 */
-	public Person findByEmailAndPassword(String email, String password);
 
 }

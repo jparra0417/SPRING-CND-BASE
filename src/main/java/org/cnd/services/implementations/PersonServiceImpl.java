@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PersonServiceImpl implements PersonService {
 	private static Logger _logger = Logger.getLogger(PersonServiceImpl.class);
-	
+
 	@Autowired
 	private PersonRepository personRepository;
 
 	@Override
 	@Transactional
-	public void save(Person person) {		
+	public void save(Person person) {
 		this.personRepository.save(person);
 	}
 
@@ -29,19 +29,4 @@ public class PersonServiceImpl implements PersonService {
 		Optional<Person> person = this.personRepository.findById(id);
 		return person.isPresent() ? person.get() : null;
 	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public Person findByEmail(String email) {
-		Optional<Person> person = this.personRepository.findByEmail(email);
-		return person.isPresent() ? person.get() : null;
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public Person findByEmailAndPassword(String email, String password) {
-		Optional<Person> person = this.personRepository.findByEmailAndPassword(email, password);
-		return person.isPresent() ? person.get() : null;
-	}
-
 }

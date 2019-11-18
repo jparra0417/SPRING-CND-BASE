@@ -8,11 +8,9 @@ import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -34,26 +32,13 @@ public class PersonController extends BaseController {
 	 * @return
 	 */
 	@PostMapping(path = "/save")
+//	@PreAuthorize("hasAuthority('FRONT')")
 	public ResponseEntity<?> save(@RequestBody Person person) {
 		List<String> errors = this.validateConstraints(person);
 		if (errors != null)
 			return new ResponseEntity<List<String>>(errors, HttpStatus.BAD_REQUEST);
 		this.personService.save(person);
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	/**
-	 * Get service to get a person by email
-	 * 
-	 * @param person
-	 * @return
-	 */
-	@GetMapping(path = "/getByEmailAndPassword")
-	public ResponseEntity<?> getByEmailAndPassword(@RequestParam String email, @RequestParam String password) {
-		Person person = this.personService.findByEmailAndPassword(email, password);
-		if (person == null)
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		return new ResponseEntity<Person>(person, HttpStatus.OK);
 	}
 
 }
