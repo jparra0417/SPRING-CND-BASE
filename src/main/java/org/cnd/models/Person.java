@@ -5,17 +5,13 @@ import java.io.Serializable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import org.cnd.util.AppConstant;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Person abstracts the model person
- * 
+ * Abstraction of person
  * @author JParra
- *
- */
-/**
- * @author User
  *
  */
 @Document(collection = "person")
@@ -25,16 +21,17 @@ public class Person extends Base implements Serializable {
 	private static final long serialVersionUID = -4352435119454271653L;
 
 	/** attributes */
-	@NotEmpty(message = "person.errorFirstNameNotEmpty")
-	@Length(max = 200, message = "person.errorFirstNameLength")
+	@NotEmpty(message = AppConstant.ERROR_KEY_PERSON_FIRST_NAME_EMPTY)
+	@Length(max = 200, message = AppConstant.ERROR_KEY_PERSON_FIRST_NAME_LENGTH)
 	private String firstName;
 
-	@NotEmpty(message = "person.errorLastNameNotEmpty")
-	@Length(max = 200, message = "person.errorLastNameLength")
+	@NotEmpty(message = AppConstant.ERROR_KEY_PERSON_LAST_NAME_EMPTY)
+	@Length(max = 200, message = AppConstant.ERROR_KEY_PERSON_LAST_NAME_LENGTH)
 	private String lastName;
 	
-	@Length(max = 100, message = "person.errorEmailLength")
-	@Email(message = "person.errorEmailEmail")		
+	@NotEmpty(message = AppConstant.ERROR_KEY_PERSON_EMAIL_EMPTY)
+	@Length(max = 100, message = AppConstant.ERROR_KEY_PERSON_EMAIL_LENGTH)
+	@Email(message = AppConstant.ERROR_KEY_PERSON_EMAIL_EMAIL)
 	private String email;
 
 	/** constructor */

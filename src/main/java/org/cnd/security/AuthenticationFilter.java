@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.cnd.services.JwtService;
-import org.cnd.util.ConstantUtil;
+import org.cnd.util.AppConstant;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,22 +28,23 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	public AuthenticationFilter(AuthenticationManager authenticationManager, JwtService jwtService) {
 		this.authenticationManager = authenticationManager;
 		this.jwtService = jwtService;
-		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(ConstantUtil.URL_ACCOUNT_LOGIN, ConstantUtil.POST));
+		setRequiresAuthenticationRequestMatcher(
+				new AntPathRequestMatcher(AppConstant.URL_ACCOUNT_LOGIN, AppConstant.POST));
 	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 
-		String email = request.getParameter(ConstantUtil.KEY_EMAIL);
-		String password = request.getParameter(ConstantUtil.KEY_PASSWORD);
+		String email = request.getParameter(AppConstant.KEY_EMAIL);
+		String password = request.getParameter(AppConstant.KEY_PASSWORD);
 
 		if (email == null || password == null) {
 			try {
 				Map<String, String> user = new ObjectMapper().readValue(request.getInputStream(), Map.class);
 				if (user != null) {
-					email = user.get(ConstantUtil.KEY_EMAIL);
-					password = user.get(ConstantUtil.KEY_PASSWORD);
+					email = user.get(AppConstant.KEY_EMAIL);
+					password = user.get(AppConstant.KEY_PASSWORD);
 				}
 
 			} catch (IOException e) {
@@ -72,7 +73,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) throws IOException, ServletException {
 
-		response.getWriter().write(new ObjectMapper().writeValueAsString(new String[] { "login.failed" }));
+		response.getWriter()
+				.write(new ObjectMapper().writeValueAsString(new String[] { AppConstant.ERROR_KEY_LOGIN_FAILED }));
 		response.setStatus(401);
 		response.setContentType("application/json");
 	}

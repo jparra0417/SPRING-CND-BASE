@@ -1,5 +1,7 @@
 package org.cnd.repositories;
 
+import java.util.Optional;
+
 import org.cnd.models.Person;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -11,5 +13,11 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  *
  */
 public interface PersonRepository extends MongoRepository<Person, String> {
-	
+	/**
+	 * Return a person according to the email
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public Optional<Person> findByEmail(String email);
 }

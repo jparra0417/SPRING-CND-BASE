@@ -22,6 +22,6 @@ public interface PersonService {
 	 * @param id
 	 * @return
 	 */
-	public Person findById(String id);
+	public Person findByEmail(String email);	
 
 }

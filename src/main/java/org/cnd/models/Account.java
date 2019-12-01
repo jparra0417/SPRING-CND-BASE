@@ -2,6 +2,10 @@ package org.cnd.models;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+
+import org.cnd.util.AppConstant;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -20,7 +24,11 @@ public class Account extends Person {
 	private List<String> authorities;
 	private Boolean enable;
 	@JsonProperty(access = Access.WRITE_ONLY)
+	@NotEmpty(message = AppConstant.ERROR_KEY_ACCOUNT_PASSWORD_EMPTY)
 	private String password;
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@NotEmpty(message = AppConstant.ERROR_KEY_ACCOUNT_TOKEN_EMPTY)
+	private String token;
 
 	public Account() {
 		super();
@@ -66,6 +74,20 @@ public class Account extends Person {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	/**
+	 * @return the token
+	 */
+	public String getToken() {
+		return token;
+	}
+
+	/**
+	 * @param token the token to set
+	 */
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

@@ -3,11 +3,12 @@ package org.cnd.services.implementations;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.cnd.models.Account;
 import org.cnd.repositories.AccountRepository;
 import org.cnd.services.AccountService;
-import org.cnd.util.ConstantUtil;
+import org.cnd.util.AppConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,6 +22,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.mongodb.client.result.UpdateResult;
 
 @Service
 public class AccountServiceImpl implements AccountService, UserDetailsService {
@@ -42,15 +45,29 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
 		if (optionalAccount.isPresent()) {
 			Account account = optionalAccount.get();
-			return new User(account.getEmail(), account.getPassword(), true, true, true, true, authorities);
+			return new User(account.getEmail(), account.getPassword(),
+					account.getEnable() != null && account.getEnable(), true, true, true, authorities);
 		} else
 			throw new UsernameNotFoundException("Email " + email + " doesnt exist");
 	}
 
 	@Override
-	public void savePassword(String email, String password) {
-		Query query = new Query(Criteria.where(ConstantUtil.KEY_EMAIL).is(email));
-		this.mongoTemplate.updateFirst(query, new Update().set(ConstantUtil.KEY_PASSWORD, password), Account.class);
+	@Transactional
+	public String createTokenByEmail(String email) {
+		String token = UUID.randomUUID().toString();
+		Query query = new Query(Criteria.where(AppConstant.KEY_EMAIL).is(email));
+		this.mongoTemplate.updateFirst(query, new Update().set(AppConstant.KEY_TOKEN, token), Account.class);
+		return token;
+	}
+
+	@Override
+	@Transactional
+	public boolean savePasswordByToken(String token, String password) {
+		Query query = new Query(Criteria.where(AppConstant.KEY_TOKEN).is(token));
+		UpdateResult updateResult = this.mongoTemplate.updateFirst(query, new Update()
+				.set(AppConstant.KEY_PASSWORD, password).set(AppConstant.KEY_TOKEN, UUID.randomUUID().toString()),
+				Account.class);
+		return updateResult != null && updateResult.getModifiedCount() > 0;
 	}
 
 }

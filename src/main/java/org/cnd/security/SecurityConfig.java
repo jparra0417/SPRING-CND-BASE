@@ -1,7 +1,7 @@
 package org.cnd.security;
 
 import org.cnd.services.JwtService;
-import org.cnd.util.ConstantUtil;
+import org.cnd.util.AppConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -43,6 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) {
-		web.ignoring().antMatchers(ConstantUtil.URL_ACCOUNT_SAVE_PASSWORD);
+		web.ignoring().antMatchers(AppConstant.URL_ACCOUNT_SIGN_UP, AppConstant.URL_ACCOUNT_SAVE_PASSWORD_BY_TOKEN);
 	}
 }

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.cnd.services.JwtService;
-import org.cnd.util.ConstantUtil;
+import org.cnd.util.AppConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,14 +40,13 @@ public class JwtServiceImpl implements JwtService {
 		Collection<? extends GrantedAuthority> roles = authentication.getAuthorities();
 		StringBuilder roleSb = new StringBuilder();
 		if (roles != null) {
-			String delim = ConstantUtil.EMPTY;
+			String delim = AppConstant.EMPTY;
 			for (GrantedAuthority grantedAuthority : roles) {
 				roleSb.append(delim).append(grantedAuthority.getAuthority());
-				delim = ConstantUtil.COMMA;
-
+				delim = AppConstant.COMMA;
 			}
 		}
-		claims.put(ConstantUtil.KEY_AUTHORITIES, roleSb.toString());
+		claims.put(AppConstant.KEY_AUTHORITIES, roleSb.toString());
 		Calendar calendarExpiration = Calendar.getInstance();
 		calendarExpiration.add(Calendar.MILLISECOND, expiration);
 
@@ -79,12 +78,12 @@ public class JwtServiceImpl implements JwtService {
 	@Override
 	public List<GrantedAuthority> getAuthorities(String strToken) throws IOException {
 		Claims token = getClaims(strToken);
-		String strRole = (String) token.get(ConstantUtil.KEY_AUTHORITIES);
+		String strRole = (String) token.get(AppConstant.KEY_AUTHORITIES);
 		if (strRole == null || strRole.isEmpty())
 			return null;
 
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		String[] roles = strRole.split(ConstantUtil.COMMA);
+		String[] roles = strRole.split(AppConstant.COMMA);
 		for (String role : roles) {
 			authorities.add(new SimpleGrantedAuthority(role));
 		}
@@ -95,8 +94,8 @@ public class JwtServiceImpl implements JwtService {
 
 	@Override
 	public String resolve(String token) {
-		if (token != null && token.startsWith(ConstantUtil.SECURITY_TOKEN_PREFIX))
-			return token.replace(ConstantUtil.SECURITY_TOKEN_PREFIX, "");
+		if (token != null && token.startsWith(AppConstant.SECURITY_TOKEN_PREFIX))
+			return token.replace(AppConstant.SECURITY_TOKEN_PREFIX, "");
 		return null;
 	}
 }

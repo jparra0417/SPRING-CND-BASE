@@ -1,18 +1,26 @@
 package org.cnd.services;
 
 /**
- * Capacities of the account service
+ * Scope of account service
  * 
- * @author User
+ * @author JParra
  *
  */
 public interface AccountService {
+
 	/**
-	 * It saves the password by email
+	 * Reset a token according to email
 	 * 
 	 * @param email
-	 * @param password
-	 * @return
 	 */
-	public void savePassword(String email, String password);
+	public String createTokenByEmail(String email);
+
+	/**
+	 * Save a password according to token
+	 * 
+	 * @param token
+	 * @param password
+	 */
+	public boolean savePasswordByToken(String token, String password);
+
 }

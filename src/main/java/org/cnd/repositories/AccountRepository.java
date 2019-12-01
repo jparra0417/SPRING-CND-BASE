@@ -6,6 +6,13 @@ import org.cnd.models.Account;
 //import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+/**
+ * Account repository is in charge of generating the basic methods to operate on
+ * database
+ * 
+ * @author JParra
+ *
+ */
 public interface AccountRepository extends MongoRepository<Account, String> {
 
 	/**
@@ -15,15 +22,5 @@ public interface AccountRepository extends MongoRepository<Account, String> {
 	 * @return
 	 */
 	public Optional<Account> findByEmail(String email);
-
-//	/**
-//	 * Return a person by the email and password
-//	 * 
-//	 * @param email
-//	 * @param password
-//	 * @return
-//	 */
-//	@Aggregation(pipeline = { "{ $match : { email: ?0 , password : ?1 } }" })
-//	public Optional<Person> findByEmailAndPassword(String email, String password);
 
 }

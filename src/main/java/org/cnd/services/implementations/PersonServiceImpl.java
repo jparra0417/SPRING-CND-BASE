@@ -25,8 +25,8 @@ public class PersonServiceImpl implements PersonService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Person findById(String id) {
-		Optional<Person> person = this.personRepository.findById(id);
+	public Person findByEmail(String email) {
+		Optional<Person> person = this.personRepository.findByEmail(email);
 		return person.isPresent() ? person.get() : null;
 	}
 }

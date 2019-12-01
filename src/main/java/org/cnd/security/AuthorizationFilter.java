@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.cnd.services.JwtService;
-import org.cnd.util.ConstantUtil;
+import org.cnd.util.AppConstant;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,14 +26,14 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
-		String header = req.getHeader(ConstantUtil.KEY_HEADER_AUTHORIZATION);
+		String header = req.getHeader(AppConstant.KEY_HEADER_AUTHORIZATION);
 		if (!this.jwtService.validate(header)) {
 			res.setStatus(403);
 			return;
 		}
 
 		UsernamePasswordAuthenticationToken userAuth = new UsernamePasswordAuthenticationToken(
-				this.jwtService.getUsername(header), ConstantUtil.EMPTY, this.jwtService.getAuthorities(header));
+				this.jwtService.getUsername(header), AppConstant.EMPTY, this.jwtService.getAuthorities(header));
 		SecurityContextHolder.getContext().setAuthentication(userAuth);
 		chain.doFilter(req, res);
 
