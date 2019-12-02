@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 /**
  * Start the application
  * 
- * @author User
+ * @author JParra
  *
  */
 @SpringBootApplication

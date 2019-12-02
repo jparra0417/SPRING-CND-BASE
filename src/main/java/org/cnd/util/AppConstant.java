@@ -10,6 +10,7 @@ public class AppConstant {
 	public static final String KEY_EMAIL = "email";
 	public static final String KEY_TOKEN = "token";
 	public static final String KEY_HIDDEN_HASH = "_h";
+	
 
 	/** security */
 	public final static String SECURITY_TOKEN_PREFIX = "Bearer ";
