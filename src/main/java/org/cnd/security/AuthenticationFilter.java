@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.cnd.services.JwtService;
 import org.cnd.util.AppConstant;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -29,7 +30,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		this.authenticationManager = authenticationManager;
 		this.jwtService = jwtService;
 		setRequiresAuthenticationRequestMatcher(
-				new AntPathRequestMatcher(AppConstant.URL_ACCOUNT_LOGIN, AppConstant.POST));
+				new AntPathRequestMatcher(AppConstant.URL_ACCOUNT_SIGNIN, AppConstant.POST));
 	}
 
 	@Override
@@ -73,8 +74,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) throws IOException, ServletException {
 
-		response.getWriter()
-				.write(new ObjectMapper().writeValueAsString(new String[] { AppConstant.ERROR_KEY_LOGIN_FAILED }));
+		if (failed instanceof DisabledException)
+			response.getWriter().write(
+					new ObjectMapper().writeValueAsString(new String[] { AppConstant.ERROR_KEY_ACCOUNT_DISABLED }));
+		else
+			response.getWriter().write(
+					new ObjectMapper().writeValueAsString(new String[] { AppConstant.ERROR_KEY_ACCOUNT_SIGNIN }));
 		response.setStatus(401);
 		response.setContentType("application/json");
 	}

@@ -6,14 +6,12 @@ import java.util.TreeMap;
 import org.cnd.models.Person;
 import org.cnd.services.AccountService;
 import org.cnd.services.EmailService;
-import org.cnd.services.HashService;
 import org.cnd.services.PersonService;
 import org.cnd.util.AppConstant;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +32,6 @@ public class PersonController extends BaseController {
 	@Autowired
 	private AccountService accountService;
 	@Autowired
-	private HashService hashService;
-	@Autowired
 	private EmailService emailService;
 
 	/**
@@ -44,7 +40,7 @@ public class PersonController extends BaseController {
 	 * @param person
 	 * @return
 	 */
-	@PostMapping(path = "/signUp")
+	@PostMapping(path = "/signup")
 	public ResponseEntity<?> signUp(@RequestBody Person person) {
 
 		// validate all fields
@@ -62,21 +58,13 @@ public class PersonController extends BaseController {
 		this.personService.save(person);
 
 		// create token and hash for the account
-		String token = this.accountService.createTokenByEmail(person.getEmail());
-		TreeMap<String, Object> map = new TreeMap<String, Object>();
-		map.put(AppConstant.KEY_TOKEN, token);
-		map.put(AppConstant.KEY_HIDDEN_HASH, hashService.create(map));
+		TreeMap<String, Object> hash = this.accountService.createHashTokenByEmail(person.getEmail());
 
 		// send email
-		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setTo(person.getEmail());
-		msg.setSubject("Welcome to CND");
-		msg.setText(
-				"Welcome to CND \n This link is to verified your email http://localhost:8080/account/savePasswordByToken?_h="
-						+ token);
-		emailService.sendEmail(msg);
+		this.emailService.sendEmailSignup(person.getEmail(), person.getFirstName(),
+				hash.get(AppConstant.KEY_HIDDEN_HASH).toString(), hash.get(AppConstant.KEY_TOKEN).toString());
 
-		return new ResponseEntity<TreeMap<String, Object>>(map, HttpStatus.OK);
+		return new ResponseEntity<Person>(person, HttpStatus.OK);
 	}
 
 }

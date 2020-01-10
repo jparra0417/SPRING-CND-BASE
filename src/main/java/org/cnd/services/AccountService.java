@@ -1,5 +1,7 @@
 package org.cnd.services;
 
+import java.util.TreeMap;
+
 /**
  * Scope of account service
  * 
@@ -14,6 +16,13 @@ public interface AccountService {
 	 * @param email
 	 */
 	public String createTokenByEmail(String email);
+
+	/**
+	 * Create a hash and token by the email of the account
+	 * @param email
+	 * @return
+	 */
+	public TreeMap<String, Object> createHashTokenByEmail(String email);
 
 	/**
 	 * Save a password according to token

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 
 import org.cnd.util.AppConstant;
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -25,6 +26,7 @@ public class Account extends Person {
 	private Boolean enable;
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotEmpty(message = AppConstant.ERROR_KEY_ACCOUNT_PASSWORD_EMPTY)
+	@Length(max = 100, message = AppConstant.ERROR_KEY_ACCOUNT_PASSWORD_LENGTH)
 	private String password;
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@NotEmpty(message = AppConstant.ERROR_KEY_ACCOUNT_TOKEN_EMPTY)
@@ -88,6 +90,12 @@ public class Account extends Person {
 	 */
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [authorities=" + authorities + ", enable=" + enable + ", password=" + password + ", token="
+				+ token + ", super=" + super.toString() + "]";
 	}
 
 }
