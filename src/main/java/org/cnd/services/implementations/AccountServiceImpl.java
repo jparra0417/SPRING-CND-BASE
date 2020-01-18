@@ -68,23 +68,33 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
 	@Override
 	@Transactional
-	public boolean savePasswordByToken(String token, String password) {
+	public boolean savePasswordByToken(String token, String password, Boolean enable) {
 		Query query = new Query(Criteria.where(AppConstant.KEY_TOKEN).is(token));
-		UpdateResult updateResult = this.mongoTemplate.updateFirst(query,
-				new Update().set(AppConstant.KEY_PASSWORD, password)
-						.set(AppConstant.KEY_TOKEN, UUID.randomUUID().toString()).set(AppConstant.KEY_ENABLE, true),
-				Account.class);
+		Update update = new Update().set(AppConstant.KEY_PASSWORD, password).set(AppConstant.KEY_TOKEN,
+				UUID.randomUUID().toString());
+		if (enable != null)
+			update.set(AppConstant.KEY_ENABLE, enable);
+
+		UpdateResult updateResult = this.mongoTemplate.updateFirst(query, update, Account.class);
 		return updateResult != null && updateResult.getModifiedCount() > 0;
 	}
 
 	@Override
 	@Transactional
-	public TreeMap<String, Object> createHashTokenByEmail(String email) {
+	public TreeMap<String, Object> createHashTokenByEmail(String email, Boolean enable) {
 		String token = this.createTokenByEmail(email);
 		TreeMap<String, Object> map = new TreeMap<String, Object>();
-		map.put(AppConstant.KEY_TOKEN, token);
+		map.put(AppConstant.KEY_TOKEN, token);		
+		if (enable != null)
+			map.put(AppConstant.KEY_ENABLE, enable);
 		map.put(AppConstant.KEY_HIDDEN_HASH, hashService.create(map));
 		return map;
+	}
+
+	@Override
+	public Account findByEmail(String email) {
+		Optional<Account> account = this.accountRepository.findByEmail(email);
+		return account.isPresent() ? account.get() : null;
 	}
 
 }

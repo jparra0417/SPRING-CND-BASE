@@ -31,6 +31,15 @@ public class EmailServiceImpl implements EmailService {
 	@Value("${email.signup.subject}")
 	private String emailSingupSubject;
 
+	@Value("${email.reset.password.body}")
+	private String emailResetPasswordBody;
+
+	@Value("${email.reset.password.subject}")
+	private String emailResetPasswordSubject;
+
+	@Value("${frontend.base}")
+	private String frontendBase;
+
 	@Override
 	public void sendEmail(String subject, String body, String... to) {
 		Thread thread = new Thread(new Runnable() {
@@ -45,7 +54,7 @@ public class EmailServiceImpl implements EmailService {
 					helper = new MimeMessageHelper(message, true);
 					helper.setTo(to);
 					helper.setText(body, true);
-					
+
 					javaMailSender.send(message);
 					email.setSent(true);
 				} catch (Exception ex) {
@@ -62,8 +71,17 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	public void sendEmailSignup(String to, String name, String hash, String token) {
-		String body = MessageFormat.format(emailSingupBody, name, hash, token);
+		String body = MessageFormat.format(emailSingupBody, name, frontendBase, hash, token, true);
 		String subject = emailSingupSubject;
 		this.sendEmail(subject, body, to);
+	}
+
+	@Override
+	public void sendEmailResetPassword(String to, String name, String hash, String token, Boolean enable) {
+		String body = MessageFormat.format(emailResetPasswordBody, name, frontendBase, hash, token,
+				enable == null ? "" : "/" + enable);
+		String subject = emailResetPasswordSubject;
+		this.sendEmail(subject, body, to);
+
 	}
 }

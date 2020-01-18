@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
+import org.cnd.models.Account;
+import org.cnd.repositories.AccountRepository;
 import org.cnd.services.JwtService;
 import org.cnd.util.AppConstant;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +29,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JwtServiceImpl implements JwtService {
 
+	@Autowired
+	AccountRepository accountRepository;
+
 	@Value("${security.jwt.key}")
 	private String securityJwtKey;
 
@@ -34,9 +41,8 @@ public class JwtServiceImpl implements JwtService {
 	@Override
 	public String create(Authentication authentication) throws JsonProcessingException {
 
-		String username = ((User) authentication.getPrincipal()).getUsername();
 		Claims claims = Jwts.claims();
-		claims.setSubject(username);
+		// get the authorities
 		Collection<? extends GrantedAuthority> roles = authentication.getAuthorities();
 		StringBuilder roleSb = new StringBuilder();
 		if (roles != null) {
@@ -47,6 +53,16 @@ public class JwtServiceImpl implements JwtService {
 			}
 		}
 		claims.put(AppConstant.KEY_AUTHORITIES, roleSb.toString());
+
+		// get the account of the user
+		Optional<Account> optionalAccount = this.accountRepository
+				.findByEmail(((User) authentication.getPrincipal()).getUsername());		
+		if (optionalAccount.isPresent()) {
+			Account account = optionalAccount.get();
+			claims.put(AppConstant.KEY_NAME, account.getFirstName());
+			claims.setSubject(account.getId());
+		}
+
 		Calendar calendarExpiration = Calendar.getInstance();
 		calendarExpiration.add(Calendar.MILLISECOND, expiration);
 

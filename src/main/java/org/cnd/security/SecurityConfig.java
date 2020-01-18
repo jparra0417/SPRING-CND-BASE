@@ -50,7 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) {
-		web.ignoring().antMatchers(AppConstant.URL_ACCOUNT_SIGN_UP, AppConstant.URL_ACCOUNT_SAVE_PASSWORD_BY_TOKEN);
+		web.ignoring().antMatchers(AppConstant.URL_ACCOUNT_SIGN_UP, AppConstant.URL_ACCOUNT_SAVE_PASSWORD_BY_TOKEN,
+				AppConstant.URL_ACCOUNT_RESET_PASSWORD);
 	}
 
 	@Bean

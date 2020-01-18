@@ -58,13 +58,13 @@ public class PersonController extends BaseController {
 		this.personService.save(person);
 
 		// create token and hash for the account
-		TreeMap<String, Object> hash = this.accountService.createHashTokenByEmail(person.getEmail());
+		TreeMap<String, Object> hash = this.accountService.createHashTokenByEmail(person.getEmail(), true);
 
 		// send email
 		this.emailService.sendEmailSignup(person.getEmail(), person.getFirstName(),
 				hash.get(AppConstant.KEY_HIDDEN_HASH).toString(), hash.get(AppConstant.KEY_TOKEN).toString());
 
-		return new ResponseEntity<Person>(person, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

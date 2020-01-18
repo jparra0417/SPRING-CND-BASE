@@ -1,10 +1,9 @@
 package org.cnd.services;
 
-import javax.mail.internet.MimeMessage;
-
 public interface EmailService {
 	/**
 	 * It sends the email by threads
+	 * 
 	 * @param subject
 	 * @param body
 	 * @param to
@@ -20,5 +19,16 @@ public interface EmailService {
 	 * @param token
 	 */
 	public void sendEmailSignup(String to, String name, String hash, String token);
+
+	/**
+	 * It sends email when someone has reseted the password
+	 * 
+	 * @param to
+	 * @param name
+	 * @param hash
+	 * @param token
+	 * @param enable
+	 */
+	public void sendEmailResetPassword(String to, String name, String hash, String token, Boolean enable);
 
 }
