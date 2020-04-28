@@ -1,2 +1,4 @@
 # SPRING-CND-BASE
-Sample project as an API base
+Spring project that supports login, register, security modules
+
+Framework: Spring Boot, and Spring Security
