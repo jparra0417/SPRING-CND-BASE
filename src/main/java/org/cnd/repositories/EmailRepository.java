@@ -1,5 +1,7 @@
 package org.cnd.repositories;
 
+import java.util.List;
+
 import org.cnd.models.Email;
 import org.springframework.data.mongodb.repository.MongoRepository;
 /**
@@ -10,5 +12,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  *
  */
 public interface EmailRepository extends MongoRepository<Email, String> {
+	
+	/**
+	 * It returns a list of email by sent
+	 * @param sent
+	 * @return
+	 */
+	public List<Email> findBySent(Boolean sent);
 
 }

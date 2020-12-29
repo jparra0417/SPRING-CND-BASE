@@ -1,6 +1,7 @@
 package org.cnd.services.implementations;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import javax.mail.internet.MimeMessage;
 
@@ -42,31 +43,9 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	public void sendEmail(String subject, String body, String... to) {
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
+		Email email = new Email(to, subject, body);
+		this.sendEmail(email);
 
-				Email email = new Email(to, subject, body);
-				try {
-					MimeMessage message = javaMailSender.createMimeMessage();
-					message.setSubject(subject);
-					MimeMessageHelper helper;
-					helper = new MimeMessageHelper(message, true);
-					helper.setTo(to);
-					helper.setText(body, true);
-
-					javaMailSender.send(message);
-					email.setSent(true);
-				} catch (Exception ex) {
-					_logger.error("Error trying to send email", ex);
-					email.setSent(false);
-				} finally {
-					emailRepository.save(email);
-				}
-
-			}
-		});
-		thread.start();
 	}
 
 	@Override
@@ -83,5 +62,42 @@ public class EmailServiceImpl implements EmailService {
 		String subject = emailResetPasswordSubject;
 		this.sendEmail(subject, body, to);
 
+	}
+
+	@Override
+	public void sendEmail(Email email) {
+		if (email != null) {
+			Thread thread = new Thread(new Runnable() {
+				@Override
+				public void run() {
+
+					try {
+						MimeMessage message = javaMailSender.createMimeMessage();
+						message.setSubject(email.getSubject());
+						MimeMessageHelper helper;
+						helper = new MimeMessageHelper(message, true);
+						helper.setTo(email.getTo());
+						helper.setText(email.getBody(), true);
+
+						javaMailSender.send(message);
+						email.setSent(true);
+					} catch (Exception ex) {
+						_logger.error("Error trying to send email", ex);
+						email.setSent(false);
+					} finally {
+						emailRepository.save(email);
+					}
+
+				}
+			});
+			thread.start();
+
+		}
+
+	}
+
+	@Override
+	public List<Email> findBySent(Boolean sent) {
+		return this.emailRepository.findBySent(sent);
 	}
 }
